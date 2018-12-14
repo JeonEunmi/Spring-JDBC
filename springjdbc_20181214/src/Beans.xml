@@ -1,0 +1,38 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	<!-- Beans.xml과 같은 위치에 jdbc.properties 파일 준비 -->
+	
+	<!-- @Autowired 어노테이션 사용을 위한 설정 -->
+	<context:annotation-config />
+	
+	<!-- 주의) context 네임스페이스 설정 추가 필요 -->
+	<context:property-placeholder
+		location="jdbc.properties" />
+	<!-- jdbc.driverClassName=com.mysql.cj.jdbc.Driver jdbc.url=jdbc:mysql://아이피주소:3306/스키마?useSSL=false&serverTimezone=UTC 
+		jdbc.username=아이디 jdbc.password=패스워드 -->
+	<!-- 스프링 프레임워크가 관리할 클래스 정보 설정 -->
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName"
+			value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+	</bean>
+	<!-- jdbc.driverClassName=com.mysql.cj.jdbc.Driver jdbc.url=jdbc:mysql://아이피주소:3306/스키마?useSSL=false&serverTimezone=UTC 
+		jdbc.username=유저아이디 jdbc.password=비밀번호 -->
+
+	<!-- Definition for memberJDBCTemplate bean -->
+	<bean id="memberJDBCTemplate"
+		class="com.member.instructorver.MemberJDBCTemplate">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- 스프링 프레임워크가 관리할 클래스 정보 설정 -->
+	<bean id = "memberService" class="com.member.instructorver.MemberService">
+		<!-- 의존주입 설정 생략 (autowired 때문에!) -->
+	</bean>
+
+</beans>
