@@ -1,0 +1,57 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	<!-- Beans.xml과 같은 위치에 jdbc.properties 파일 준비 -->
+	<!-- 주의) context 네임스페이스 설정 추가 필요 -->
+	<context:property-placeholder
+		location="com/config/jdbc.properties" />
+	<!-- jdbc.driverClassName=com.mysql.cj.jdbc.Driver jdbc.url=jdbc:mysql://아이피주소:3306/스키마?useSSL=false&serverTimezone=UTC 
+		jdbc.username=아이디 jdbc.password=패스워드 -->
+	<!-- 스프링 프레임워크가 관리할 클래스 정보 설정 -->
+	<!-- 데이터베이스 커넥션 객체 등록 -->
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName"
+			value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+	</bean>
+	
+	<!-- 스프링 프레임워크가 관리할 클래스 정보 설정 -->
+	<bean id="regionDAO" class="com.persistance.RegionDAOImpl">
+		<!-- 의존주입 설정 -->
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	
+	<!-- 스프링 프레임워크가 관리할 클래스 정보 설정 -->
+	<bean id="jobDAO" class="com.persistance.JobDAOImpl">
+		<!-- 의존주입 설정 -->
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- 스프링 프레임워크가 관리할 클래스 정보 설정 -->
+	<bean id="departmentDAO" class="com.persistance.DepartmentDAOImpl">
+		<!-- 의존주입 설정 -->
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- 스프링 프레임워크가 관리할 클래스 정보 설정 -->
+	<bean id="loginDAO" class="com.persistance.LoginDAOImpl">
+		<!-- 의존주입 설정 -->
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- 스프링 프레임워크가 관리할 클래스 정보 설정 -->
+	<!-- scope="singleton" 속성은 same Bean 전달 -->
+	<!-- scope="prototype" 속성은 new Bean 전달 -->
+	<bean id="service" class="com.service.Service" scope="prototype">
+		<!-- 의존주입 설정 -->
+		<property name="regionDAO" ref="regionDAO" />
+		<property name="departmentDAO" ref="departmentDAO" />
+		<property name="jobDAO" ref="jobDAO" />
+		<property name="loginDAO" ref="loginDAO" />
+	</bean>
+</beans>
